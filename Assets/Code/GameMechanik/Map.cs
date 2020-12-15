@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class Map : MonoBehaviour
 {
+    [SerializeField] private GameObject[] WinCars;
 
     [SerializeField] private Text[] WinTexts;
     [SerializeField] private Color WinTextsColor;
@@ -68,22 +69,13 @@ public class Map : MonoBehaviour
 
     public IEnumerator CompleteLevel()
     {
-        var objects = GameObject.FindGameObjectsWithTag("Road");
-
-        for (int i = 0; i < objects.Length; i++)
+         foreach(var car in WinCars)
         {
-            objects[i].transform.DOMove(objects[i].transform.position + new Vector3(0, 1, 0), 0.3f);
-            yield return new WaitForSeconds(0.05f);
+            car.SetActive(true);
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1f);
 
-        CameraMove.Shake(1, 0.1f, CameraMove.ShakeMode.XY);
-        for (int i = 0; i < objects.Length; i++)
-        {
-            objects[i].transform.DOMove(objects[i].transform.position - new Vector3(0, 1, 0), 1f);
-        }
-
-        foreach(var text in WinTexts)
+        foreach (var text in WinTexts)
         {
             StartCoroutine(ChangeTextColor(text, WinTextsColor, 1f));
         }
