@@ -4,67 +4,35 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
-	public enum ShakeMode { OnlyX, OnlyY, OnlyZ, XY, XZ, XYZ };
+    [SerializeField] private float _moveSpeed;
 
-	private static Transform tr;
-	private static float elapsed, i_Duration, i_Power, percentComplete;
-	private static ShakeMode i_Mode;
-	private static Vector3 originalPos;
+    [SerializeField] private Vector2 _maximumPosition;
+    [SerializeField] private Vector2 _minimumPosition;
 
-	void Start()
-	{
-		percentComplete = 1;
-		tr = GetComponent<Transform>();
-	}
+    private void Update()
+    {
 
-	public static void Shake(float duration, float power)
-	{
-		if (percentComplete == 1) originalPos = tr.localPosition;
-		i_Mode = ShakeMode.XYZ;
-		elapsed = 0;
-		i_Duration = duration;
-		i_Power = power;
-	}
+        if (Input.touchCount == 1 && Map.CanReadInput)
+        {
+            var calculatedPosition = transform.localPosition - (Vector3)Input.GetTouch(0).deltaPosition * Time.deltaTime * _moveSpeed;
+            transform.localPosition = calculatedPosition;
+        }
 
-	public static void Shake(float duration, float power, ShakeMode mode)
-	{
-		if (percentComplete == 1) originalPos = tr.localPosition;
-		i_Mode = mode;
-		elapsed = 0;
-		i_Duration = duration;
-		i_Power = power;
-	}
+        transform.localPosition = transform.localPosition.Clamp(_minimumPosition, _maximumPosition);
+    }
+}
 
-	void Update()
-	{
-		if (elapsed < i_Duration)
-		{
-			elapsed += Time.deltaTime;
-			percentComplete = elapsed / i_Duration;
-			percentComplete = Mathf.Clamp01(percentComplete);
-			Vector3 rnd = Random.insideUnitSphere * i_Power * (1f - percentComplete);
-
-			switch (i_Mode)
-			{
-				case ShakeMode.XYZ:
-					tr.localPosition = originalPos + rnd;
-					break;
-				case ShakeMode.OnlyX:
-					tr.localPosition = originalPos + new Vector3(rnd.x, 0, 0);
-					break;
-				case ShakeMode.OnlyY:
-					tr.localPosition = originalPos + new Vector3(0, rnd.y, 0);
-					break;
-				case ShakeMode.OnlyZ:
-					tr.localPosition = originalPos + new Vector3(0, 0, rnd.z);
-					break;
-				case ShakeMode.XY:
-					tr.localPosition = originalPos + new Vector3(rnd.x, rnd.y, 0);
-					break;
-				case ShakeMode.XZ:
-					tr.localPosition = originalPos + new Vector3(rnd.x, 0, rnd.z);
-					break;
-			}
-		}
-	}
+public static class Vector2Extension
+{
+    public static Vector2 Clamp(this Vector2 vector, Vector2 minumum, Vector2 maximum )
+    {
+        return new Vector2(Mathf.Clamp(vector.x, minumum.x, maximum.x), Mathf.Clamp(vector.y, minumum.y, maximum.y));
+    }
+}
+public static class Vector3Extension
+{
+    public static Vector2 Clamp(this Vector3 vector, Vector2 minumum, Vector2 maximum)
+    {
+        return new Vector2(Mathf.Clamp(vector.x, minumum.x, maximum.x), Mathf.Clamp(vector.y, minumum.y, maximum.y));
+    }
 }

@@ -19,7 +19,16 @@ public class PlayerInput : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "Road")
                 {
+#if UNITY_EDITOR
                     OnRoadRaycast.Invoke(hit.collider.gameObject);
+#elif UNITY_ANDROID
+                    if (Input.GetTouch(0).phase == TouchPhase.Began)
+                    {
+                        OnRoadRaycast.Invoke(hit.collider.gameObject);
+                    }
+                    
+#endif
+
                 }
             }
         }

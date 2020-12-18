@@ -18,6 +18,7 @@ public class Map : MonoBehaviour
     private float _suitSpeed = 0.2f;
     private int _maximumIteration = 5;
     public static bool Ready { get; private set; } = false;
+    public static bool CanReadInput { get; private set; } = false;
 
     public bool IsComplete()
     {
@@ -53,22 +54,24 @@ public class Map : MonoBehaviour
         StartCoroutine(Suit());
         yield return new WaitForSeconds(_suitSpeed * 3 * (_maximumIteration-1));
         Ready = true;
+        CanReadInput = true;
     }
 
     public IEnumerator Suit()
     {
+        
         var objects = GameObject.FindGameObjectsWithTag("Road");
         System.Random random = new System.Random(_seed);
 
         for(int i = 0; i < objects.Length; i++)
         {
-            StartCoroutine(_road.RotateRoad(objects[i].transform, _suitSpeed, random.Next(0, _maximumIteration)));
+            StartCoroutine(_road.RotateRoad(objects[i].transform, _suitSpeed, random.Next(0, _maximumIteration), random.Next(-1, 1)));
             yield return new WaitForSeconds(0.1f);
         }
     }
-
     public IEnumerator CompleteLevel()
     {
+        CanReadInput = false;
          foreach(var car in WinCars)
         {
             car.SetActive(true);
