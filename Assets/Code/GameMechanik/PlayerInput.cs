@@ -17,10 +17,8 @@ public class PlayerInput : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider.gameObject.tag == "Road")
-                {
 #if UNITY_EDITOR
-                    OnRoadRaycast.Invoke(hit.collider.gameObject);
+                OnRoadRaycast.Invoke(hit.collider.gameObject);
 #elif UNITY_ANDROID
                     if (Input.GetTouch(0).phase == TouchPhase.Began)
                     {
@@ -29,7 +27,7 @@ public class PlayerInput : MonoBehaviour
                     
 #endif
 
-                }
+
             }
         }
     }

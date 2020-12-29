@@ -112,3 +112,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrueRotation: 0
   IsMirror: 0
+  LocalFreePlace:
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: -1}

@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class Map : MonoBehaviour
 {
-    [SerializeField] private GameObject[] WinCars;
+    public Car WinCar;
 
     [SerializeField] private Text[] WinTexts;
     [SerializeField] private Color WinTextsColor;
@@ -16,40 +16,44 @@ public class Map : MonoBehaviour
     [SerializeField] private int _seed = 0;
 
     private float _suitSpeed = 0.2f;
-    private int _maximumIteration = 5;
+    private int _maximumIteration = 4;
     public static bool Ready { get; private set; } = false;
-    public static bool CanReadInput { get; private set; } = false;
+    public static bool CanReadInput = false;
 
-    public bool IsComplete()
+    public bool IsComplete(RoadPlace road)
     {
-        var roads = GameObject.FindObjectsOfType<RoadPlace>();//FindGameObjectsWithTag("Road");
-
-        int trues = 0;
-        foreach(var road in roads)
+        if (road.IsMirror)
         {
-            if (road.IsMirror)
+            if ((int)road.TrueRotation == (int)road.transform.eulerAngles.y
+                || (int)road.TrueRotation == (int)(road.transform.eulerAngles.y - 180)
+                || (int)road.TrueRotation == (int)(road.transform.eulerAngles.y + 180))
             {
-                if (road.TrueRotation == (int)road.transform.eulerAngles.y 
-                    || road.TrueRotation == (int)(road.transform.eulerAngles.y - 180) 
-                    || road.TrueRotation == (int)(road.transform.eulerAngles.y + 180))
-                {
-                    trues++;
-                }
+                return true;
             }
-            else
+        }
+        else
+
+        {
+            if ((int)road.TrueRotation == (int)road.transform.eulerAngles.y)
             {
-                if(road.TrueRotation == (int)road.transform.eulerAngles.y)
-                {
-                    trues++;
-                }
+                return true;
             }
         }
 
-        return trues == roads.Length;
+        return false;
+    }
+
+    private void OnUserTouch(GameObject hitObject)
+    {
+        if (hitObject.tag == "Start" && CanReadInput)
+        {
+            WinCar.StartMove();
+        }
     }
 
     private IEnumerator Start()
     {
+        PlayerInput.OnRoadRaycast += OnUserTouch;
         yield return new WaitWhile(() => !Input.anyKey);
         StartCoroutine(Suit());
         yield return new WaitForSeconds(_suitSpeed * 3 * (_maximumIteration-1));
@@ -65,16 +69,22 @@ public class Map : MonoBehaviour
 
         for(int i = 0; i < objects.Length; i++)
         {
-            StartCoroutine(_road.RotateRoad(objects[i].transform, _suitSpeed, random.Next(0, _maximumIteration), random.Next(-1, 1)));
-            yield return new WaitForSeconds(0.1f);
+            var iteration = random.Next(0, _maximumIteration);
+            var direct = random.Next(-1, 1);
+
+            if (iteration > 0)
+            {
+                StartCoroutine(_road.RotateRoad(objects[i].transform, _suitSpeed, iteration, direct));
+                yield return new WaitForSeconds(0.1f);
+            }
         }
     }
-    public IEnumerator CompleteLevel()
+   /* public IEnumerator CompleteLevel()
     {
         CanReadInput = false;
          foreach(var car in WinCars)
         {
-            car.SetActive(true);
+            car.GetComponent<Car>().enabled = true;
         }
         yield return new WaitForSeconds(1f);
 
@@ -85,7 +95,7 @@ public class Map : MonoBehaviour
 
         yield return new WaitWhile(() => !Input.anyKey);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+    }*/
 
     private IEnumerator ChangeTextColor(Text text, Color to, float duraction)
     {

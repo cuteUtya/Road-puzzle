@@ -5,8 +5,6 @@ using DG.Tweening;
 using UnityEngine.SceneManagement;
 public class Road : MonoBehaviour
 {
-    [SerializeField] private Map _map;
-
     private List<Transform> _moved = new List<Transform>();
     private bool _canChange = true;
 
@@ -14,11 +12,14 @@ public class Road : MonoBehaviour
     {
         PlayerInput.OnRoadRaycast += OnRoadRaycast;
     }
-    private void OnRoadRaycast(GameObject road)
+    private void OnRoadRaycast(GameObject hitObject)
     {
         if (_canChange)
         {
-            StartCoroutine(RotateRoad(road.transform, 1, 0.15f));
+            if (hitObject.tag == "Road")
+            {
+                StartCoroutine(RotateRoad(hitObject.transform, 1, 0.15f));
+            }
         }
     }
 
@@ -35,17 +36,11 @@ public class Road : MonoBehaviour
             yield return new WaitForSeconds(stepTime);
             _moved.Remove(road);
         }
-
-        if (_map.IsComplete())
-        {
-            _canChange = false;
-            StartCoroutine(_map.CompleteLevel());
-        }
     }
 
     public IEnumerator RotateRoad(Transform road, float stepTime, int iteration, int direct)
     {
-        if (!_moved.Contains(road))
+        if (!_moved.Contains(road) && iteration > 0)
         {
             _moved.Add(road);
             road.DOMove(road.position + new Vector3(0, 0.5f, 0), stepTime);
@@ -56,17 +51,5 @@ public class Road : MonoBehaviour
             yield return new WaitForSeconds(stepTime);
             _moved.Remove(road);
         }
-
-        if (_map.IsComplete())
-        {
-            _canChange = false;
-            StartCoroutine(_map.CompleteLevel());
-        }
-        /*
-        for (int i = 0; i < iteration; i++)
-        {
-            StartCoroutine(RotateRoad(road, Random.Range(-1, 2), stepTime));
-            yield return new WaitForSeconds(stepTime * 3);
-        }*/
     }
 }

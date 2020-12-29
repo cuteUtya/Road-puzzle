@@ -91,7 +91,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3618395298965011909}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1a33e5ce1b47ade498abeb7c32567fa0, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -112,3 +112,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrueRotation: 0
   IsMirror: 1
+  MoveOutPoint: {x: 0, y: 0, z: 0}

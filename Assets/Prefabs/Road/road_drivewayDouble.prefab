@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 1979070474322016767}
   - component: {fileID: 3231554323311916634}
   - component: {fileID: 809591031458857616}
-  - component: {fileID: 2580248989651748418}
   - component: {fileID: -1142017568139527760}
+  - component: {fileID: 6237156735491189429}
   m_Layer: 0
   m_Name: road_drivewayDouble
   m_TagString: Road
@@ -84,20 +84,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &2580248989651748418
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170024067699123013}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6883311590221120416, guid: 643733af330dda0498abc06498b9e2a2, type: 3}
 --- !u!114 &-1142017568139527760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,3 +98,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrueRotation: 0
   IsMirror: 1
+  MoveOutPoint: {x: 0, y: 0, z: 0}
+--- !u!65 &6237156735491189429
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170024067699123013}
+  m_Material: {fileID: 13400000, guid: 1a33e5ce1b47ade498abeb7c32567fa0, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 0.02, z: 0.99999994}
+  m_Center: {x: 0, y: 0.01, z: 0}

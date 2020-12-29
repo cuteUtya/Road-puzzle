@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2971847236676936498}
   - component: {fileID: 2202758046148848791}
   - component: {fileID: 4140272110314788957}
-  - component: {fileID: 1743279474464420108}
   - component: {fileID: 3712577716323373873}
+  - component: {fileID: 4849748760502194069}
   m_Layer: 0
   m_Name: road_bendSquare
   m_TagString: Road
@@ -84,20 +84,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &1743279474464420108
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2483119452655892872}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -7863074684771173335, guid: add0021fe8e5de846abcce392778c803, type: 3}
 --- !u!114 &3712577716323373873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,3 +98,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrueRotation: 0
   IsMirror: 0
+  MoveOutPoint: {x: 0, y: 0, z: 0}
+--- !u!65 &4849748760502194069
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483119452655892872}
+  m_Material: {fileID: 13400000, guid: 1a33e5ce1b47ade498abeb7c32567fa0, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 0.02, z: 0.99999994}
+  m_Center: {x: 0, y: 0.01, z: 0}

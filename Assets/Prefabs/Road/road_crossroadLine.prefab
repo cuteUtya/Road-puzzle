@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 6272508668275630811}
   - component: {fileID: 6963610607013571966}
   - component: {fileID: 5136146167750416820}
-  - component: {fileID: 2927997999801333613}
+  - component: {fileID: 1620836475326714856}
   m_Layer: 0
   m_Name: road_crossroadLine
-  m_TagString: Road
+  m_TagString: StaticRoad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,17 +83,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &2927997999801333613
-MeshCollider:
+--- !u!65 &1620836475326714856
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6649492050478692449}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1a33e5ce1b47ade498abeb7c32567fa0, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1477822401377601907, guid: 8253d3db8c77d0e49ab9f8718beb8348, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 0.02, z: 0.99999994}
+  m_Center: {x: 0, y: 0.01, z: 0}
