@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8291371120313028434}
   - component: {fileID: 6121563231524764568}
   - component: {fileID: -4547744992084322999}
-  - component: {fileID: 2971543424888051847}
+  - component: {fileID: 5399455247167887505}
   m_Layer: 0
   m_Name: road_bend
   m_TagString: Road
@@ -99,17 +99,16 @@ MonoBehaviour:
   TrueRotation: 0
   IsMirror: 0
   MoveOutPoint: {x: -0.91, y: 0, z: 0.09}
---- !u!64 &2971543424888051847
-MeshCollider:
+--- !u!65 &5399455247167887505
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5761464171418851917}
-  m_Material: {fileID: 13400000, guid: 1a33e5ce1b47ade498abeb7c32567fa0, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8439104543645927819, guid: fe37cc00aeb5492429b09b1ad3f4cac0, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 0.02, z: 0.99999994}
+  m_Center: {x: 0, y: 0.01, z: 0}

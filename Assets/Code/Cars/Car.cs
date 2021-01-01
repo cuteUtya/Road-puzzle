@@ -8,8 +8,9 @@ public class Car : MonoBehaviour
 {
     [SerializeField] private Map _map;
 
+    [SerializeField] private AnimationCurve _brakeGraphic;
     [SerializeField] private Transform _centreOfMass;
-    [SerializeField] private GameObject _explossionFX;
+    [SerializeField] private Transform _body;
     [SerializeField] private SplineFollower _spline;
     [SerializeField] private float _targetSpeed;
     [SerializeField] private float _speedRate;
@@ -43,7 +44,7 @@ public class Car : MonoBehaviour
         _spline.enabled = true;
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         if (_spline && !_carCrahed)
         {
@@ -71,6 +72,46 @@ public class Car : MonoBehaviour
 
     private IEnumerator StopMoving()
     {
+        List<Material> carMats = new List<Material>();
+
+        foreach(var render in transform.GetComponentsInChildren<MeshRenderer>())
+        {
+            foreach (var material in render.materials)
+            {
+                ChangeRenderMode(material, BlendMode.Transparent);
+                carMats.Add(material);
+            }
+        }
+
+        float time = 0;
+        float defSpeed = _spline.followSpeed;
+
+        float t = 1f;
+        while (t > 0)
+        {
+            yield return new WaitForEndOfFrame();
+            time += Time.deltaTime;
+
+            Debug.Log(_brakeGraphic.Evaluate(time) + "  " + _spline.followSpeed);
+
+            t = _brakeGraphic.Evaluate(time);
+            _spline.followSpeed = Mathf.Lerp(0, defSpeed, t);
+
+            foreach(var mat in carMats)
+            {
+                mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, t);
+            }
+        }
+
+        _spline.followSpeed = 0;
+
+        var copy = Instantiate(_copy);
+        _map.WinCar = copy.GetComponent<Car>();
+        copy.transform.DOMove(_defaultPosition, _moveTime);
+        copy.SetActive(true);
+
+        Destroy(this.gameObject);
+        /*
         var copy = Instantiate(_copy);
         _map.WinCar = copy.GetComponent<Car>();
         copy.transform.DOMove(_defaultPosition, _moveTime);
@@ -79,6 +120,7 @@ public class Car : MonoBehaviour
 
         RoadPlace current;
 
+        
         if (TryGetCurrentPlatform(out current) && Map.CanReadInput)
         {
             Destroy(_spline);
@@ -89,14 +131,11 @@ public class Car : MonoBehaviour
             GetComponent<Rigidbody>().velocity = ((current.MoveOutPoint + current.transform.position) - transform.position) * 3;
             transform.DORotate(Quaternion.LookRotation(current.MoveOutPoint, transform.up).eulerAngles, 0.5f);
         }
-
+        
         yield return new WaitForSeconds(0.1f);
 
         GetComponent<Rigidbody>().useGravity = true;
-
-            yield return null;
-        
-
+        */
     }
 
     /*private IEnumerator MoveOut()
@@ -111,10 +150,7 @@ public class Car : MonoBehaviour
         }
         yield return null;
 
-        var copy = Instantiate(_copy);
-        _map.WinCar = copy.GetComponent<Car>();
-        copy.transform.DOMove(_defaultPosition, _moveTime);
-        copy.SetActive(true);
+        
     }*/
 
     private bool TryGetCurrentPlatform(out RoadPlace platform)
@@ -162,14 +198,6 @@ public class Car : MonoBehaviour
         return false;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "Ground" && _carCrahed)
-        {
-            _explossionFX.SetActive(true);
-        }
-    }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
@@ -193,5 +221,57 @@ public class Car : MonoBehaviour
             Gizmos.color = Color.blue;
             Gizmos.DrawWireCube(roaddown.transform.position, new Vector3(1, 0.1f, 1f));
         }
+    }
+
+    public enum BlendMode
+    {
+        Opaque,
+        Cutout,
+        Fade,
+        Transparent
+    }
+
+    public static void ChangeRenderMode(Material standardShaderMaterial, BlendMode blendMode)
+    {
+        switch (blendMode)
+        {
+            case BlendMode.Opaque:
+                standardShaderMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                standardShaderMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                standardShaderMaterial.SetInt("_ZWrite", 1);
+                standardShaderMaterial.DisableKeyword("_ALPHATEST_ON");
+                standardShaderMaterial.DisableKeyword("_ALPHABLEND_ON");
+                standardShaderMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                standardShaderMaterial.renderQueue = -1;
+                break;
+            case BlendMode.Cutout:
+                standardShaderMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                standardShaderMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                standardShaderMaterial.SetInt("_ZWrite", 1);
+                standardShaderMaterial.EnableKeyword("_ALPHATEST_ON");
+                standardShaderMaterial.DisableKeyword("_ALPHABLEND_ON");
+                standardShaderMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                standardShaderMaterial.renderQueue = 2450;
+                break;
+            case BlendMode.Fade:
+                standardShaderMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                standardShaderMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                standardShaderMaterial.SetInt("_ZWrite", 0);
+                standardShaderMaterial.DisableKeyword("_ALPHATEST_ON");
+                standardShaderMaterial.EnableKeyword("_ALPHABLEND_ON");
+                standardShaderMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                standardShaderMaterial.renderQueue = 3000;
+                break;
+            case BlendMode.Transparent:
+                standardShaderMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                standardShaderMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                standardShaderMaterial.SetInt("_ZWrite", 0);
+                standardShaderMaterial.DisableKeyword("_ALPHATEST_ON");
+                standardShaderMaterial.DisableKeyword("_ALPHABLEND_ON");
+                standardShaderMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+                standardShaderMaterial.renderQueue = 3000;
+                break;
+        }
+
     }
 }
