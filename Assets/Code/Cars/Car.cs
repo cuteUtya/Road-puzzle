@@ -9,18 +9,13 @@ public class Car : MonoBehaviour
     [SerializeField] private Map _map;
 
     [SerializeField] private AnimationCurve _brakeGraphic;
-    [SerializeField] private Transform _centreOfMass;
     [SerializeField] private Transform _body;
     [SerializeField] private SplineFollower _spline;
-    [SerializeField] private float _targetSpeed;
-    [SerializeField] private float _speedRate;
 
     [SerializeField] private GameObject _spawnPoint;
 
     // время, за которое машина доедет от точки спавна до дефолтной позиции
     [SerializeField] private float _moveTime;
-
-    private Vector3 _lastRotation;
 
     private bool _playerLoose = false;
     private float _distanceToNextPlatform;
@@ -31,7 +26,6 @@ public class Car : MonoBehaviour
 
     private void Start()
     {
-        GetComponent<Rigidbody>().centerOfMass = _centreOfMass.localPosition;
         if (_copy == null)
         {
             _copy = Instantiate(gameObject, _spawnPoint.transform.position, transform.rotation);
@@ -48,15 +42,7 @@ public class Car : MonoBehaviour
     {
         if (_spline && !_carCrahed)
         {
-            if (!_playerLoose)
-            {
-                var rotationDelta = transform.eulerAngles - _lastRotation;
-
-                _spline.followSpeed = Mathf.Lerp(_spline.followSpeed, _targetSpeed / Mathf.Clamp(Mathf.Clamp(Mathf.Abs(rotationDelta.y), 1, Mathf.Infinity), 1, _targetSpeed), Time.deltaTime * _speedRate);
-
-                _lastRotation = transform.eulerAngles;
-            }
-
+            
             if (!NextPlatormIsValid() && _distanceToNextPlatform < 0.5f)
             {
                 RoadPlace current;

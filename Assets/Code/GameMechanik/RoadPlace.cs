@@ -12,4 +12,12 @@ public class RoadPlace : MonoBehaviour
     {
         TrueRotation = transform.eulerAngles.y;
     }
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+        {
+            transform.position = new Vector3(Mathf.RoundToInt(transform.position.x), ((int)(transform.position.y / 0.5f) * 0.5f), Mathf.RoundToInt(transform.position.z));
+        }
+    }
 }
